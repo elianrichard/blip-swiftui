@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-struct DrawingShape: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct DrawingShape: Shape {
+    let points: [CGPoint]
+    let engine = DrawingEngine()
+    func path(in rect: CGRect) -> Path {
+        engine.createPath(for: points)
     }
-}
-
-#Preview {
-    DrawingShape()
 }

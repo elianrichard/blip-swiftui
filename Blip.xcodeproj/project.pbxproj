@@ -24,6 +24,10 @@
 		6768F5E02BBD2FDC0077AFFC /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6768F5DF2BBD2FDC0077AFFC /* SummaryView.swift */; };
 		6768F5E32BBD34940077AFFC /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6768F5E22BBD34930077AFFC /* LoginView.swift */; };
 		6768F5E52BBD36EE0077AFFC /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6768F5E42BBD36EE0077AFFC /* Coordinator.swift */; };
+		A3D4012D2BBD4851008D6EAF /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D4012C2BBD4851008D6EAF /* DrawingView.swift */; };
+		A3D4012F2BBD486E008D6EAF /* DrawingShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D4012E2BBD486E008D6EAF /* DrawingShape.swift */; };
+		A3D401312BBD489C008D6EAF /* DrawingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D401302BBD489C008D6EAF /* DrawingEngine.swift */; };
+		A3D401332BBD48C2008D6EAF /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D401322BBD48C2008D6EAF /* Line.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +49,10 @@
 		6768F5DF2BBD2FDC0077AFFC /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
 		6768F5E22BBD34930077AFFC /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		6768F5E42BBD36EE0077AFFC /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		A3D4012C2BBD4851008D6EAF /* DrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
+		A3D4012E2BBD486E008D6EAF /* DrawingShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingShape.swift; sourceTree = "<group>"; };
+		A3D401302BBD489C008D6EAF /* DrawingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingEngine.swift; sourceTree = "<group>"; };
+		A3D401322BBD48C2008D6EAF /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +132,10 @@
 			isa = PBXGroup;
 			children = (
 				6768F5C02BBC5F1E0077AFFC /* DrawView.swift */,
+				A3D4012C2BBD4851008D6EAF /* DrawingView.swift */,
+				A3D4012E2BBD486E008D6EAF /* DrawingShape.swift */,
+				A3D401302BBD489C008D6EAF /* DrawingEngine.swift */,
+				A3D401322BBD48C2008D6EAF /* Line.swift */,
 			);
 			path = DrawView;
 			sourceTree = "<group>";
@@ -243,15 +255,19 @@
 				6768F5AA2BBC3BE80077AFFC /* CounterView.swift in Sources */,
 				6768F5A82BBC3BE80077AFFC /* BlipApp.swift in Sources */,
 				6768F5E52BBD36EE0077AFFC /* Coordinator.swift in Sources */,
+				A3D4012D2BBD4851008D6EAF /* DrawingView.swift in Sources */,
 				6768F5E02BBD2FDC0077AFFC /* SummaryView.swift in Sources */,
 				6768F5C42BBCD8360077AFFC /* StopListView.swift in Sources */,
 				6768F5DA2BBD2CBF0077AFFC /* HomeFilledView.swift in Sources */,
 				6768F5C12BBC5F1E0077AFFC /* DrawView.swift in Sources */,
+				A3D401312BBD489C008D6EAF /* DrawingEngine.swift in Sources */,
 				6768F5B62BBC57540077AFFC /* CounterValueContainerView.swift in Sources */,
+				A3D4012F2BBD486E008D6EAF /* DrawingShape.swift in Sources */,
 				6768F5C72BBCE34E0077AFFC /* StopListModel.swift in Sources */,
 				6768F5E32BBD34940077AFFC /* LoginView.swift in Sources */,
 				6768F5BA2BBC57BC0077AFFC /* CounterHeaderView.swift in Sources */,
 				6768F5B82BBC578B0077AFFC /* CounterNavView.swift in Sources */,
+				A3D401332BBD48C2008D6EAF /* Line.swift in Sources */,
 				6768F5D82BBD2C910077AFFC /* HomeView.swift in Sources */,
 				6768F5C92BBCE9F70077AFFC /* StopListViewModel.swift in Sources */,
 				6768F5BC2BBC5D6E0077AFFC /* CounterViewModel.swift in Sources */,

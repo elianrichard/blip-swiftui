@@ -38,12 +38,13 @@ struct CounterView: View {
             }
             .ignoresSafeArea(.all)
             .sheet(isPresented: $viewModel.isShowDrawView, content: {
-                DrawView(prevInValue: $viewModel.passInValue,
-                         prevOutValue: $viewModel.passOutValue,
-                         isShowDrawer: $viewModel.isShowDrawView,
-                         isPassInModified: $viewModel.isInValueModified,
-                         isPassOutModified: $viewModel.isOutValueModified,
-                         selectedDrawer: viewModel.selectedDrawView)
+                DrawingView(isShowDrawView: $viewModel.isShowDrawView)
+//                DrawView(prevInValue: $viewModel.passInValue,
+//                         prevOutValue: $viewModel.passOutValue,
+//                         isShowDrawer: $viewModel.isShowDrawView,
+//                         isPassInModified: $viewModel.isInValueModified,
+//                         isPassOutModified: $viewModel.isOutValueModified,
+//                         selectedDrawer: viewModel.selectedDrawView)
             })
         }.navigationBarBackButtonHidden(true)
     }
