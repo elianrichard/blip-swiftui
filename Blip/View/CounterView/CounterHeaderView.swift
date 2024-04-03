@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct CounterHeaderView: View {
     var currentStop: String
     var departureTime: String
@@ -18,7 +19,7 @@ struct CounterHeaderView: View {
                 Button {
                     presentationMode.wrappedValue.dismiss()
                 } label: {
-                    Image(systemName: "chevron.left")
+                    Image(systemName: "list.bullet")
                         .imageScale(.large)
                         .foregroundStyle(.blue)
                         .fontWeight(.bold)
@@ -36,15 +37,26 @@ struct CounterHeaderView: View {
             Text (departureTime)
                 .font(.title)
                 .fontWeight(.bold)
-                .foregroundStyle(.red)
+                .foregroundStyle(isLate(departureTime) ? .red : .green)
         }
         .frame(minHeight: 40)
         .safeAreaPadding(.top, 60)
         .safeAreaPadding(.horizontal)
     }
-}
+    
+    func isLate (_ departureTime: String) -> Bool {
+        let currentDate = Date()
+        let currentCalendar = Calendar.current
+        let currentHour = currentCalendar.component(.hour, from: currentDate)
+        let currentMinutes = currentCalendar.component(.minute, from: currentDate)
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        
+        let departureFormattedTime = formatter.date(from: departureTime) ?? Date()
+        let currentFormattedTime = formatter.date(from: "\(currentHour):\(currentMinutes)") ?? Date()
 
-//#Preview {
-//    CounterHeaderView(currentStop: "Edutown 1",
-//                      departureTime: "05:50", presentationMode: .constant(PresentationMode))
-//}
+        if (departureFormattedTime >= currentFormattedTime) { return false }
+        else { return true }
+    }
+}

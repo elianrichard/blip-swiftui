@@ -12,7 +12,7 @@ struct CounterView: View {
     @StateObject var viewModel = CounterViewModel()
     
     var currentStop = "Edutown 1"
-    var departureTime = "05:50"
+    var departureTime = "20:50"
     var prevStop = "Simplicity 1"
     var nextStop = "Simplicity 2"
     
@@ -38,13 +38,13 @@ struct CounterView: View {
             }
             .ignoresSafeArea(.all)
             .sheet(isPresented: $viewModel.isShowDrawView, content: {
-                DrawingView(isShowDrawView: $viewModel.isShowDrawView)
-//                DrawView(prevInValue: $viewModel.passInValue,
-//                         prevOutValue: $viewModel.passOutValue,
-//                         isShowDrawer: $viewModel.isShowDrawView,
-//                         isPassInModified: $viewModel.isInValueModified,
-//                         isPassOutModified: $viewModel.isOutValueModified,
-//                         selectedDrawer: viewModel.selectedDrawView)
+//                DrawingView(isShowDrawView: $viewModel.isShowDrawView)
+                DrawView(prevInValue: $viewModel.passInValue,
+                         prevOutValue: $viewModel.passOutValue,
+                         isShowDrawer: $viewModel.isShowDrawView,
+                         isPassInModified: $viewModel.isInValueModified,
+                         isPassOutModified: $viewModel.isOutValueModified,
+                         selectedDrawer: viewModel.selectedDrawView)
             })
         }.navigationBarBackButtonHidden(true)
     }
