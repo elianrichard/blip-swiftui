@@ -10,14 +10,19 @@ import SwiftUI
 struct CounterHeaderView: View {
     var currentStop: String
     var departureTime: String
+    var presentationMode: Binding<PresentationMode>
     
     var body: some View {
         HStack (spacing: 15) {
             HStack (alignment: .center, spacing: 10) {
-                Image(systemName: "chevron.left")
-                    .imageScale(.large)
-                    .foregroundStyle(.blue)
-                    .fontWeight(.bold)
+                Button {
+                    presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .imageScale(.large)
+                        .foregroundStyle(.blue)
+                        .fontWeight(.bold)
+                }
                 Text(currentStop)
                     .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
                     .font(.largeTitle)
@@ -39,7 +44,7 @@ struct CounterHeaderView: View {
     }
 }
 
-#Preview {
-    CounterHeaderView(currentStop: "Edutown 1",
-                      departureTime: "05:50")
-}
+//#Preview {
+//    CounterHeaderView(currentStop: "Edutown 1",
+//                      departureTime: "05:50", presentationMode: .constant(PresentationMode))
+//}

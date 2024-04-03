@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-@main
-struct BlipApp: App {
+@main struct BlipApp: App {
     var body: some Scene {
         WindowGroup {
-            CounterView()
+            LoginView()
         }
     }
 }

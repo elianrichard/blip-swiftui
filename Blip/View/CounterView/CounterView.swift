@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CounterView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var viewModel = CounterViewModel()
     
     var currentStop = "Edutown 1"
@@ -18,7 +19,7 @@ struct CounterView: View {
     var body: some View {
         NavigationView {
             VStack {
-                CounterHeaderView(currentStop: currentStop, departureTime: departureTime)
+                CounterHeaderView(currentStop: currentStop, departureTime: departureTime, presentationMode: presentationMode)
                 Spacer()
                 VStack {
                     CounterValueContainerView(countValue: $viewModel.passInValue,
