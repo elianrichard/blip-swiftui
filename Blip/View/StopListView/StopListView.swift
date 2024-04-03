@@ -24,22 +24,41 @@ struct StopListView: View {
                         .foregroundStyle(.black)
                     ) {
                         ForEach(shift.stops) { stop in
-                            NavigationLink("\(stop.stopName) - [\(stop.departureTime)]", destination: CounterView(currentStop: stop.stopName, departureTime: stop.departureTime, prevStop: "Simplicity 1", nextStop: "Simplicity 2").navigationBarBackButtonHidden(true))
-//                            HStack {
-//                                Text("\(stop.stopName) - [\(stop.departureTime)]")
-//                                Spacer()
-//                                HStack {
-//                                    Text("Edit")
-//                                    Image(systemName: "chevron.right")
-//                                }
-//                                .foregroundStyle(.secondary)
-//                            }
-//                            .padding(.vertical)
-//                            .listRowSeparator(/*@START_MENU_TOKEN@*/.visible/*@END_MENU_TOKEN@*/, edges: .top)
-//                            .listRowSeparatorTint(.black)
-//                            .onTapGesture {
-//                                viewModel.selectedBusStop = stop
-//                            }
+                            //                            NavigationLink("\(stop.stopName) - [\(stop.departureTime)]", destination: CounterView(currentStop: stop.stopName, departureTime: stop.departureTime, prevStop: "Simplicity 1", nextStop: "Simplicity 2"))
+                            NavigationLink {
+                                CounterView(currentStop: stop.stopName, departureTime: stop.departureTime, prevStop: "Simplicity 1", nextStop: "Simplicity 2")
+                            } label: {
+                                HStack {
+                                    Text("\(stop.stopName) - [\(stop.departureTime)]")
+//                                    Spacer()
+//                                    HStack {
+//                                        Text("Edit")
+//                                        Image(systemName: "chevron.right")
+//                                    }
+//                                    .foregroundStyle(.secondary)
+                                }
+                                .padding(.vertical)
+                                .listRowSeparator(/*@START_MENU_TOKEN@*/.visible/*@END_MENU_TOKEN@*/, edges: .top)
+                                .listRowSeparatorTint(.black)
+                                .onTapGesture {
+                                    viewModel.selectedBusStop = stop
+                                }
+                            }
+                            //                            HStack {
+                            //                                Text("\(stop.stopName) - [\(stop.departureTime)]")
+                            //                                Spacer()
+                            //                                HStack {
+                            //                                    Text("Edit")
+                            //                                    Image(systemName: "chevron.right")
+                            //                                }
+                            //                                .foregroundStyle(.secondary)
+                            //                            }
+                            //                            .padding(.vertical)
+                            //                            .listRowSeparator(/*@START_MENU_TOKEN@*/.visible/*@END_MENU_TOKEN@*/, edges: .top)
+                            //                            .listRowSeparatorTint(.black)
+                            //                            .onTapGesture {
+                            //                                viewModel.selectedBusStop = stop
+                            //                            }
                         }
                     }
                     .listSectionSeparator(.hidden)

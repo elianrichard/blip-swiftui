@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var coordinator: Coordinator
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
+        NavigationStack() {
             VStack {
                 HStack {
                     Image("iconFace")
@@ -52,21 +51,17 @@ struct HomeView: View {
                 }
                 .padding(.bottom, 70.0)
                 
-                Button(action: {
-                    coordinator.path.append("StopListView")
-                }, label: {
-                        Text("START")
-                            .foregroundColor(.white)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                            .frame(width: 350, height: 50)
-                            .background(Rectangle().fill(Color.blue).shadow(radius: 2))
-                            .cornerRadius(15)
-                    })
-                .navigationDestination(for: String.self) { view in
-                    if view == "StopListView" {
-                        StopListView()
-                    }
+                NavigationLink {
+                    StopListView()
+                } label: {
+                    
+                    Text("START")
+                        .foregroundColor(.white)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                        .frame(width: 350, height: 50)
+                        .background(Rectangle().fill(Color.blue).shadow(radius: 2))
+                        .cornerRadius(15)
                 }
             }
             .padding()
@@ -75,6 +70,6 @@ struct HomeView: View {
 }
 
 
-//#Preview {
-//    HomeView()
-//}
+#Preview {
+    HomeView()
+}
