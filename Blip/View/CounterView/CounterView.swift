@@ -45,7 +45,7 @@ struct CounterView: View {
                          isPassOutModified: $viewModel.isOutValueModified,
                          selectedDrawer: viewModel.selectedDrawView)
             })
-        }
+        }.navigationBarBackButtonHidden(true)
     }
 }
 

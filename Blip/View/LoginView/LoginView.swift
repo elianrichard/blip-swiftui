@@ -12,12 +12,9 @@ struct LoginView: View {
     @State private var username = ""
     @State private var password: String = ""
     @State private var isPasswordVisible: Bool = false
-    
-    @State private var coordinator = Coordinator()
-//    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack(path: $coordinator.path) {
+        NavigationStack() {
             VStack {
                 HStack {
                     Image("iconFace")
@@ -86,21 +83,17 @@ struct LoginView: View {
                 }
             
                 VStack {
-                    Button(action: {
-//                        coordinator.show(HomeView.self)
-                        coordinator.path.append("HomeView")
-                    }) {
+                    
+                    NavigationLink {
+                        HomeView()
+                    } label: {
                         Text("Sign In")
                             .frame(width: 315)
                             .foregroundColor(.white)
                             .padding()
                             .background(Color.blue)
                             .cornerRadius(12)
-                    }.navigationDestination(for: String.self) { view in
-                        if view == "HomeView" {
-                            HomeView(coordinator: $coordinator.path)
-                        }
-                    }
+                    }.navigationBarBackButtonHidden(true).toolbar(.hidden)
                     
                     Button(action: {
                         // Action
@@ -131,7 +124,7 @@ struct LoginView: View {
                 }
             }
             .padding(.horizontal, 22)
-        }
+        }.navigationBarBackButtonHidden(true)
     }
 }
 
