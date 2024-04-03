@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  SummaryView.swift
 //  App
 //
 //  Created by Muhammad Yusuf on 02/04/24.
@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct SummaryView: View {
+struct ContentView: View {
     var body: some View {
         ZStack {
             Color.white
                 .ignoresSafeArea()
             
-            VStack(spacing: 0) {
+            VStack(spacing: 8) {
                 HeaderView()
                 ShiftLabelView()
                 ScrollView {
-                    VStack(spacing: 16) {
+                    VStack(spacing: 17) {
                         ForEach(1...6, id: \.self) { index in
                             ReportCardView(edutownNumber: index)
                         }
@@ -93,35 +93,54 @@ struct ShiftLabelView: View {
 
 struct ReportCardView: View {
     let edutownNumber: Int
-    
+    @State private var isExpanded: Bool = false
+
     var body: some View {
         VStack {
+            // Header section
             HStack {
                 Text("Edutown \(edutownNumber)")
+                    .font(.system(size: 17, weight: .semibold))
                 Spacer()
-                Button(action: {}) {
-                    Image(systemName: "chevron.right")
+                Button(action: {
+                    withAnimation {
+                        isExpanded.toggle()
+                    }
+                }) {
+                    Image(systemName: isExpanded ? "chevron.down" : "chevron.right")
                         .foregroundColor(.blue)
                 }
-                Spacer()
                 Text("IN")
                 Spacer()
                 Text("OUT")
+
             }
             .font(.system(size: 17, weight: .semibold))
+            .padding(.horizontal)
             
+
             Divider()
-            HStack {
-                Text("Total")
-                Spacer(minLength: 169)
-                Text("78")
-                Spacer()
-                Text("78")
+            if !isExpanded { TotalView()
+                    .font(.system(size: 17, weight: .semibold))
             }
-            .font(.system(size: 17, weight: .semibold))
+            if isExpanded {
+                DetailedNumbersData.View(data: DetailedNumbersData())
+                
+                HStack {
+                    Text("Total")
+                        .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.black)
+                    }
+                    Spacer()
+                    Text("78")
+                        .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.black)
+            } else {
+                Spacer()
+            }
         }
         .padding()
-        .frame(height: 106)
+        .frame(height: isExpanded ? 580 : 95)
         .background(Color.white)
         .cornerRadius(10)
         .overlay(
@@ -130,6 +149,58 @@ struct ReportCardView: View {
         )
     }
 }
+
+struct TotalView: View {
+    var body: some View {
+        HStack {
+            Text("Total")
+            Spacer(minLength: 145)
+            Text("78")
+            Spacer()
+            Text("78")
+        }
+    }
+}
+
+//struct ReportCardView: View {
+//    let edutownNumber: Int
+//    
+//    var body: some View {
+//        VStack {
+//            HStack {
+//                Text("Edutown \(edutownNumber)")
+//                Spacer()
+//                Button(action: {}) {
+//                    Image(systemName: "chevron.right")
+//                        .foregroundColor(.blue)
+//                }
+//                Spacer()
+//                Text("IN")
+//                Spacer()
+//                Text("OUT")
+//            }
+//            .font(.system(size: 17, weight: .semibold))
+//            
+//            Divider()
+//            HStack {
+//                Text("Total")
+//                Spacer(minLength: 169)
+//                Text("78")
+//                Spacer()
+//                Text("78")
+//            }
+//            .font(.system(size: 17, weight: .semibold))
+//        }
+//        .padding()
+//        .frame(height: 106)
+//        .background(Color.white)
+//        .cornerRadius(10)
+//        .overlay(
+//            RoundedRectangle(cornerRadius: 10)
+//                .stroke(Color.black, lineWidth: 1)
+//        )
+//    }
+//}
 
 struct BlurView: UIViewRepresentable {
     var style: UIBlurEffect.Style
@@ -145,6 +216,6 @@ struct BlurView: UIViewRepresentable {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        SummaryView()
+        ContentView()
     }
 }
