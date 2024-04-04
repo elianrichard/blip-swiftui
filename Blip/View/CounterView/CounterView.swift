@@ -11,24 +11,42 @@ struct CounterView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var viewModel = CounterViewModel()
     
-    var currentStop = "Edutown 1"
-    var departureTime = "20:50"
-    var prevStop = "Simplicity 1"
-    var nextStop = "Simplicity 2"
+    @ObservedObject var allStopData: StopListData
+    var shiftId: UUID
+    var stopId: UUID
     
+    var stopData: BusStop? {
+        return allStopData.findBusStopById(shiftId: shiftId, stopId: stopId)
+    }
+    var prevStop: String? {
+        guard let prevBusStop = allStopData.findPrevBusStop(currentShiftId: shiftId, currentStopId: stopId) else {
+            return nil
+        }
+        return prevBusStop.stopName
+    }
+    var nextStop: String? {
+        guard let nextBusStop = allStopData.findNextBusStop(currentShiftId: shiftId, currentStopId: stopId) else {
+            return nil
+        }
+        return nextBusStop.stopName
+    }
     var body: some View {
         NavigationView {
             VStack {
-                CounterHeaderView(currentStop: currentStop, departureTime: departureTime, presentationMode: presentationMode)
+                CounterHeaderView(currentStop: stopData?.stopName,
+                                  departureTime: stopData?.departureTime,
+                                  presentationMode: presentationMode)
                 Spacer()
                 VStack {
-                    CounterValueContainerView(countValue: $viewModel.passInValue,
-                                              isModified: $viewModel.isInValueModified,
+                    CounterValueContainerView(allStopData: allStopData,
+                                              shiftId: shiftId,
+                                              stopId: stopId,
                                               selectedCounter: .passIn,
                                               selectedDrawView: $viewModel.selectedDrawView,
                                               isShowDrawView: $viewModel.isShowDrawView)
-                    CounterValueContainerView(countValue: $viewModel.passOutValue,
-                                              isModified:  $viewModel.isOutValueModified,
+                    CounterValueContainerView(allStopData: allStopData,
+                                              shiftId: shiftId,
+                                              stopId: stopId,
                                               selectedCounter: .passOut,
                                               selectedDrawView: $viewModel.selectedDrawView,
                                               isShowDrawView: $viewModel.isShowDrawView)
@@ -38,12 +56,11 @@ struct CounterView: View {
             }
             .ignoresSafeArea(.all)
             .sheet(isPresented: $viewModel.isShowDrawView, content: {
-//                DrawingView(isShowDrawView: $viewModel.isShowDrawView)
-                DrawView(prevInValue: $viewModel.passInValue,
-                         prevOutValue: $viewModel.passOutValue,
+                //                DrawingView(isShowDrawView: $viewModel.isShowDrawView)
+                DrawView(allStopData: allStopData,
+                         shiftId: shiftId,
+                         stopId: stopId,
                          isShowDrawer: $viewModel.isShowDrawView,
-                         isPassInModified: $viewModel.isInValueModified,
-                         isPassOutModified: $viewModel.isOutValueModified,
                          selectedDrawer: viewModel.selectedDrawView)
             })
         }.navigationBarBackButtonHidden(true)
@@ -51,5 +68,7 @@ struct CounterView: View {
 }
 
 #Preview {
-    CounterView()
+    CounterView(allStopData: StopListData(),
+                shiftId: StopListData().data[0].id,
+                stopId: StopListData().data[0].stops[0].id)
 }

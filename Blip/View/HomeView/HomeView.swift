@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct HomeView: View {
+    
+    @StateObject var allStopList = StopListData()
+    
     var body: some View {
         NavigationStack() {
             VStack {
@@ -52,9 +55,8 @@ struct HomeView: View {
                 .padding(.bottom, 70.0)
                 
                 NavigationLink {
-                    StopListView()
+                    StopListView(allStopList: allStopList)
                 } label: {
-                    
                     Text("START")
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)

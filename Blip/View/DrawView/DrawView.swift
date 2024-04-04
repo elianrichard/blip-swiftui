@@ -8,43 +8,50 @@
 import SwiftUI
 
 struct DrawView: View {
-    @Binding var prevInValue: Int
-    @Binding var prevOutValue: Int
+    
+    @ObservedObject var allStopData: StopListData
+    var shiftId: UUID
+    var stopId: UUID
+    
     @Binding var isShowDrawer: Bool
-    @Binding var isPassInModified: Bool
-    @Binding var isPassOutModified: Bool
     var selectedDrawer: SelectedDrawView
     
     @State var newValue: String = ""
     
+    var stopData: BusStop? {
+        return allStopData.findBusStopById(shiftId: shiftId, stopId: stopId)
+    }
+
+    
     var body: some View {
-        VStack{
-            Text("Previous Value: \(selectedDrawer == .passIn ? prevInValue : prevOutValue )")
-            
-            TextField("Input your number", text: $newValue).frame(width: 200).border(Color.black)
-            
-            Button ("Submit Value") {
-                switch (selectedDrawer) {
+        if let stopData = stopData {
+            VStack{
+                Text("Previous Value: \(selectedDrawer == .passIn ? stopData.passengerIn : stopData.passengerOut )")
+                
+                TextField("Input your number", text: $newValue).frame(width: 200).border(Color.black)
+                
+                Button ("Submit Value") {
+                    switch (selectedDrawer) {
                     case .passIn:
-                        prevInValue = Int(newValue) ?? 0
-                        isPassInModified = true
+                        allStopData.setPassengerIn(shiftId: shiftId, stopId: stopId, value: Int(newValue) ?? 0)
                     case .passOut:
-                        prevOutValue = Int(newValue) ?? 0
-                        isPassOutModified = true
+                        allStopData.setPassengerOut(shiftId: shiftId, stopId: stopId, value: Int(newValue) ?? 0)
+                    }
+                    isShowDrawer = false
                 }
-                isShowDrawer = false
+                .buttonStyle(.bordered)
+                .tint(.black)
             }
-            .buttonStyle(.bordered)
-            .tint(.black)
+        } else {
+            Text("Bus Stop Data not found")
         }
     }
 }
 
 #Preview {
-    DrawView(prevInValue: .constant(10),
-             prevOutValue: .constant(20),
+    DrawView(allStopData: StopListData(),
+             shiftId: StopListData().data[0].id,
+             stopId: StopListData().data[0].stops[0].id,
              isShowDrawer: .constant(true),
-             isPassInModified: .constant(false),
-             isPassOutModified: .constant(false),
              selectedDrawer: .passIn)
 }

@@ -11,8 +11,7 @@ struct StopListView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var selectedRoute: String = ""
     
-    @StateObject var viewModel = StopListViewModel()
-    @StateObject var AllStopList = StopListData()
+    @ObservedObject var allStopList: StopListData
     
     var body: some View {
         NavigationStack {
@@ -37,7 +36,7 @@ struct StopListView: View {
                         .padding(.horizontal)
                 }
                 List {
-                    ForEach(AllStopList.data) { shift in
+                    ForEach(allStopList.data) { shift in
                         Section(header:
                                     HStack{
                             
@@ -49,7 +48,10 @@ struct StopListView: View {
                             .foregroundStyle(.black)
                         ) {
                             ForEach(shift.stops) { stop in
-                                NavigationLink("\(stop.stopName) - [\(stop.departureTime)]", destination: CounterView(currentStop: stop.stopName, departureTime: stop.departureTime, prevStop: "Simplicity 1", nextStop: "Simplicity 2"))
+                                NavigationLink("\(stop.stopName) - [\(stop.departureTime)]", 
+                                               destination: CounterView(allStopData: allStopList,
+                                                                        shiftId: shift.id,
+                                                                        stopId: stop.id))
                             }
                         }
                         .listSectionSeparator(.hidden)
@@ -67,5 +69,5 @@ struct StopListView: View {
 }
 
 #Preview {
-    StopListView()
+    StopListView(allStopList: StopListData())
 }

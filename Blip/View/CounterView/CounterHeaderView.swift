@@ -9,8 +9,8 @@ import SwiftUI
 
 
 struct CounterHeaderView: View {
-    var currentStop: String
-    var departureTime: String
+    var currentStop: String?
+    var departureTime: String?
     var presentationMode: Binding<PresentationMode>
     
     var body: some View {
@@ -24,7 +24,7 @@ struct CounterHeaderView: View {
                         .foregroundStyle(.blue)
                         .fontWeight(.bold)
                 }
-                Text(currentStop)
+                Text(currentStop ?? "Bus Stop Not Found")
                     .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
                     .font(.largeTitle)
                     .fontWeight(.semibold)
@@ -34,10 +34,10 @@ struct CounterHeaderView: View {
                     .multilineTextAlignment(.leading)
             }
             Spacer()
-            Text (departureTime)
+            Text (departureTime ?? "00:00")
                 .font(.title)
                 .fontWeight(.bold)
-                .foregroundStyle(isLate(departureTime) ? .red : .green)
+                .foregroundStyle(isLate(departureTime ?? "00:00") ? .red : .green)
         }
         .frame(minHeight: 40)
         .safeAreaPadding(.top, 60)
