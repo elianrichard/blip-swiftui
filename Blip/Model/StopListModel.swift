@@ -25,8 +25,8 @@ struct ShiftCycle: Identifiable {
     var stops: [BusStop]
 }
 
-final class StopListData: ObservableObject {
-    @Published var data = [
+@Observable class StopListData: ObservableObject {
+    var data = [
         ShiftCycle(shiftName: "The Breeze - AEON Mall - The Breeze", shiftCount: 1, shiftCycle: 1, stops: [
             BusStop(stopName: "The Breeze", departureTime: "09:00"),
             BusStop(stopName: "CBD Timur 1", departureTime: "09:02"),
@@ -113,7 +113,14 @@ final class StopListData: ObservableObject {
         ]),
     ]
     
-    func findBusStopIndex (shiftId: UUID, stopId: UUID) -> (Int, Int)? {
+    func findShiftIndexById (shiftId: UUID) -> Int? {
+        if let shiftIndex = data.firstIndex(where: { $0.id == shiftId }) {
+            return shiftIndex
+        }
+        return nil
+    }
+    
+    func findBusStopIndexById (shiftId: UUID, stopId: UUID) -> (Int, Int)? {
         if let shiftIndex = data.firstIndex(where: { $0.id == shiftId }),
            let stopIndex = data[shiftIndex].stops.firstIndex(where: { $0.id == stopId }) {
             return (shiftIndex, stopIndex)
@@ -122,79 +129,79 @@ final class StopListData: ObservableObject {
     }
     
     func findBusStopByIndex(shiftIndex: Int, stopIndex: Int) -> BusStop? {
-        return data[shiftIndex].stops[stopIndex]
-    }
-    
-    func findBusStopById(shiftId: UUID, stopId: UUID) -> BusStop? {
-        if let (shiftIndex, stopIndex) = findBusStopIndex(shiftId: shiftId, stopId: stopId) {
-            return data[shiftIndex].stops[stopIndex]}
+        guard shiftIndex < data.count,
+              shiftIndex >= 0,
+              stopIndex < data[shiftIndex].stops.count,
+              stopIndex >= 0
         else {
             return nil
         }
+        return data[shiftIndex].stops[stopIndex]
     }
     
-    func findPrevBusStop (currentShiftId: UUID, currentStopId: UUID) -> BusStop? {
-        if let (currentShiftIndex, currentBusStopIndex) = findBusStopIndex(shiftId: currentShiftId, stopId: currentStopId){
-            if currentBusStopIndex == 0 {
-                return nil
-            } else if let busStop = findBusStopByIndex(shiftIndex: currentShiftIndex,
-                                                       stopIndex: currentBusStopIndex - 1){
-                return busStop
-            }
+    func findPrevBusStop (currentShiftIdx: Int, currentStopIdx: Int) -> BusStop? {
+        guard let (prevShiftIndex, prevStopIndex) = findPrevIndex(currentShiftIdx: currentShiftIdx, currentStopIdx: currentStopIdx) else {
+            return nil
         }
-        return nil
+        return findBusStopByIndex(shiftIndex: prevShiftIndex, stopIndex: prevStopIndex)
     }
     
-    func findNextBusStop (currentShiftId: UUID, currentStopId: UUID) -> BusStop? {
-        if let (currentShiftIndex, currentBusStopIndex) = findBusStopIndex(shiftId: currentShiftId, stopId: currentStopId){
-            if currentBusStopIndex == data[currentShiftIndex].stops.count - 1 {
-                if currentShiftIndex == data.count - 1 {
-                    return nil
-                } else {
-                    return data[currentShiftIndex].stops[0]
-                }
-            } else if let busStop = findBusStopByIndex(shiftIndex: currentShiftIndex,
-                                                       stopIndex: currentBusStopIndex + 1){
-                return busStop
-            }
+    func findNextBusStop(currentShiftIdx: Int, currentStopIdx: Int) -> BusStop? {
+        guard let (nextShiftIndex, nextStopIndex) = findNextIndex(currentShiftIdx: currentShiftIdx, currentStopIdx: currentStopIdx) else {
+            return nil
         }
-        return nil
+        return findBusStopByIndex(shiftIndex: nextShiftIndex, stopIndex: nextStopIndex)
     }
     
-    func incrementPassengerIn (shiftId: UUID, stopId: UUID) {
-        guard let (shiftIndex, busStopIndex) = findBusStopIndex(shiftId: shiftId, stopId: stopId) else { return }
+    func findPrevIndex (currentShiftIdx: Int, currentStopIdx: Int) -> (Int, Int)? {
+        if (currentStopIdx == 0 && currentShiftIdx > 0) {
+            return (currentShiftIdx - 1, data[currentShiftIdx - 1].stops.count - 1)
+        } else if (currentStopIdx > 0) {
+            return (currentShiftIdx, currentStopIdx - 1)
+        } else { return nil }
+    }
+    
+    func findNextIndex (currentShiftIdx: Int, currentStopIdx: Int) -> (Int, Int)? {
+        guard currentShiftIdx < data.count, currentStopIdx < data[currentShiftIdx].stops.count else {
+            return nil
+        }
+
+        if currentStopIdx == data[currentShiftIdx].stops.count - 1 {
+            return (currentShiftIdx + 1, 0)
+        } else {
+            return (currentShiftIdx, currentStopIdx + 1)
+        }
+    }
+    
+    func incrementPassengerIn (shiftIndex: Int, busStopIndex: Int) {
         data[shiftIndex].stops[busStopIndex].passengerIn += 1
         data[shiftIndex].stops[busStopIndex].isPassInModified = true
     }
     
-    func decrementPassengerIn (shiftId: UUID, stopId: UUID) {
-        guard let (shiftIndex, busStopIndex) = findBusStopIndex(shiftId: shiftId, stopId: stopId) else { return }
+    func decrementPassengerIn (shiftIndex: Int, busStopIndex: Int) {
         data[shiftIndex].stops[busStopIndex].isPassInModified = true
         if data[shiftIndex].stops[busStopIndex].passengerIn == 0 { return }
         data[shiftIndex].stops[busStopIndex].passengerIn -= 1
     }
     
-    func incrementPassengerOut (shiftId: UUID, stopId: UUID) {
-        guard let (shiftIndex, busStopIndex) = findBusStopIndex(shiftId: shiftId, stopId: stopId) else { return }
+    func incrementPassengerOut (shiftIndex: Int, busStopIndex: Int) {
         data[shiftIndex].stops[busStopIndex].passengerOut += 1
         data[shiftIndex].stops[busStopIndex].isPassOutModified = true
     }
     
-    func decrementPassengerOut (shiftId: UUID, stopId: UUID) {
-        guard let (shiftIndex, busStopIndex) = findBusStopIndex(shiftId: shiftId, stopId: stopId) else { return }
+    func decrementPassengerOut (shiftIndex: Int, busStopIndex: Int) {
         data[shiftIndex].stops[busStopIndex].isPassOutModified = true
         if data[shiftIndex].stops[busStopIndex].passengerOut == 0 { return }
         data[shiftIndex].stops[busStopIndex].passengerOut -= 1
     }
     
-    func setPassengerIn (shiftId: UUID, stopId: UUID, value: Int) {
-        guard let (shiftIndex, busStopIndex) = findBusStopIndex(shiftId: shiftId, stopId: stopId) else { return }
+    func setPassengerIn (shiftIndex: Int, busStopIndex: Int, value: Int) {
+        if (value < 0) { return }
         data[shiftIndex].stops[busStopIndex].isPassInModified = true
         data[shiftIndex].stops[busStopIndex].passengerIn = value
     }
     
-    func setPassengerOut (shiftId: UUID, stopId: UUID, value: Int) {
-        guard let (shiftIndex, busStopIndex) = findBusStopIndex(shiftId: shiftId, stopId: stopId) else { return }
+    func setPassengerOut (shiftIndex: Int, busStopIndex: Int, value: Int) {
         data[shiftIndex].stops[busStopIndex].isPassOutModified = true
         data[shiftIndex].stops[busStopIndex].passengerOut = value
     }

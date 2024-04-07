@@ -8,25 +8,38 @@
 import SwiftUI
 
 struct CounterNavView: View {
-    var prevStop: String?
-    var nextStop: String?
+    @ObservedObject var allStopData: StopListData
+    
+    @Binding var shiftIdx: Int
+    @Binding var stopIdx: Int
+    
+    var prevStop: BusStop? {
+        return allStopData.findPrevBusStop(currentShiftIdx: shiftIdx, currentStopIdx: stopIdx)
+    }
+    
+    var nextStop: BusStop? {
+        return allStopData.findNextBusStop(currentShiftIdx: shiftIdx, currentStopIdx: stopIdx)
+    }
     
     var body: some View {
         if (prevStop == nil && nextStop == nil) {
-            Text("No Prev Stop or Next Stop Found")
+            Text("No Prev Stop or Next Stop Found \(shiftIdx) \(stopIdx)")
                 .frame(minHeight: 100)
         } else {
             HStack (spacing: 0) {
                 if let prevStop = prevStop {
                     Button {
-                        print("Back")
+                        if let (prevShiftIndex, prevStopIndex) = allStopData.findPrevIndex(currentShiftIdx: shiftIdx, currentStopIdx: stopIdx) {
+                            shiftIdx = prevShiftIndex
+                            stopIdx = prevStopIndex
+                        }
                     } label: {
                         HStack {
                             Image(systemName: "chevron.left")
                                 .imageScale(.large)
                                 .foregroundStyle(.black)
                                 .fontWeight(.bold)
-                            Text(prevStop)
+                            Text(prevStop.stopName)
                                 .font(.title)
                                 .fontWeight(.regular)
                                 .foregroundStyle(.black)
@@ -45,10 +58,13 @@ struct CounterNavView: View {
                     }
                 }
                     Button {
-                        print("Forward")
+                        if let (nextShiftIndex, nextStopIndex) = allStopData.findNextIndex(currentShiftIdx: shiftIdx, currentStopIdx: stopIdx) {
+                            shiftIdx = nextShiftIndex
+                            stopIdx = nextStopIndex
+                        }
                     } label: {
                         HStack {
-                            Text(nextStop ?? "See Summary")
+                            Text(nextStop?.stopName ?? "See Summary")
                                 .font(.title)
                                 .fontWeight(.regular)
                                 .foregroundStyle(.black)
@@ -81,6 +97,7 @@ struct CounterNavView: View {
     }
 }
 #Preview {
-    CounterNavView(prevStop: "Simplicity 1",
-                   nextStop: "Simplicity 2")
+    CounterNavView(allStopData: StopListData(),
+                   shiftIdx: .constant(3),
+                   stopIdx: .constant(20))
 }

@@ -10,8 +10,8 @@ import SwiftUI
 struct DrawView: View {
     
     @ObservedObject var allStopData: StopListData
-    var shiftId: UUID
-    var stopId: UUID
+    var shiftIdx: Int
+    var stopIdx: Int
     
     @Binding var isShowDrawer: Bool
     var selectedDrawer: SelectedDrawView
@@ -19,7 +19,7 @@ struct DrawView: View {
     @State var newValue: String = ""
     
     var stopData: BusStop? {
-        return allStopData.findBusStopById(shiftId: shiftId, stopId: stopId)
+        return allStopData.findBusStopByIndex(shiftIndex: shiftIdx, stopIndex: stopIdx)
     }
 
     
@@ -33,9 +33,9 @@ struct DrawView: View {
                 Button ("Submit Value") {
                     switch (selectedDrawer) {
                     case .passIn:
-                        allStopData.setPassengerIn(shiftId: shiftId, stopId: stopId, value: Int(newValue) ?? 0)
+                        allStopData.setPassengerIn(shiftIndex: shiftIdx, busStopIndex: stopIdx, value: Int(newValue) ?? 0)
                     case .passOut:
-                        allStopData.setPassengerOut(shiftId: shiftId, stopId: stopId, value: Int(newValue) ?? 0)
+                        allStopData.setPassengerOut(shiftIndex: shiftIdx, busStopIndex: stopIdx, value: Int(newValue) ?? 0)
                     }
                     isShowDrawer = false
                 }
@@ -50,8 +50,8 @@ struct DrawView: View {
 
 #Preview {
     DrawView(allStopData: StopListData(),
-             shiftId: StopListData().data[0].id,
-             stopId: StopListData().data[0].stops[0].id,
+             shiftIdx: 0,
+             stopIdx: 0,
              isShowDrawer: .constant(true),
              selectedDrawer: .passIn)
 }

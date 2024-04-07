@@ -12,24 +12,13 @@ struct CounterView: View {
     @StateObject var viewModel = CounterViewModel()
     
     @ObservedObject var allStopData: StopListData
-    var shiftId: UUID
-    var stopId: UUID
-    
+    @State var shiftIdx: Int
+    @State var stopIdx: Int
+
     var stopData: BusStop? {
-        return allStopData.findBusStopById(shiftId: shiftId, stopId: stopId)
+        return allStopData.findBusStopByIndex(shiftIndex: shiftIdx, stopIndex: stopIdx)
     }
-    var prevStop: String? {
-        guard let prevBusStop = allStopData.findPrevBusStop(currentShiftId: shiftId, currentStopId: stopId) else {
-            return nil
-        }
-        return prevBusStop.stopName
-    }
-    var nextStop: String? {
-        guard let nextBusStop = allStopData.findNextBusStop(currentShiftId: shiftId, currentStopId: stopId) else {
-            return nil
-        }
-        return nextBusStop.stopName
-    }
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -39,27 +28,29 @@ struct CounterView: View {
                 Spacer()
                 VStack {
                     CounterValueContainerView(allStopData: allStopData,
-                                              shiftId: shiftId,
-                                              stopId: stopId,
+                                              shiftIdx: shiftIdx,
+                                              stopIdx: stopIdx,
                                               selectedCounter: .passIn,
                                               selectedDrawView: $viewModel.selectedDrawView,
                                               isShowDrawView: $viewModel.isShowDrawView)
                     CounterValueContainerView(allStopData: allStopData,
-                                              shiftId: shiftId,
-                                              stopId: stopId,
+                                              shiftIdx: shiftIdx,
+                                              stopIdx: stopIdx,
                                               selectedCounter: .passOut,
                                               selectedDrawView: $viewModel.selectedDrawView,
                                               isShowDrawView: $viewModel.isShowDrawView)
                 }
                 Spacer()
-                CounterNavView(prevStop: prevStop, nextStop: nextStop)
+                CounterNavView(allStopData: allStopData,
+                               shiftIdx: $shiftIdx,
+                               stopIdx: $stopIdx)
             }
             .ignoresSafeArea(.all)
             .sheet(isPresented: $viewModel.isShowDrawView, content: {
                 //                DrawingView(isShowDrawView: $viewModel.isShowDrawView)
                 DrawView(allStopData: allStopData,
-                         shiftId: shiftId,
-                         stopId: stopId,
+                         shiftIdx: shiftIdx,
+                         stopIdx: stopIdx,
                          isShowDrawer: $viewModel.isShowDrawView,
                          selectedDrawer: viewModel.selectedDrawView)
             })
@@ -69,6 +60,6 @@ struct CounterView: View {
 
 #Preview {
     CounterView(allStopData: StopListData(),
-                shiftId: StopListData().data[0].id,
-                stopId: StopListData().data[0].stops[0].id)
+                shiftIdx: 0,
+                stopIdx: 0)
 }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct StopListView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @State var selectedRoute: String = ""
     
     @ObservedObject var allStopList: StopListData
     
@@ -48,10 +47,35 @@ struct StopListView: View {
                             .foregroundStyle(.black)
                         ) {
                             ForEach(shift.stops) { stop in
-                                NavigationLink("\(stop.stopName) - [\(stop.departureTime)]", 
+                                NavigationLink("\(stop.stopName) - [\(stop.departureTime)]",
                                                destination: CounterView(allStopData: allStopList,
-                                                                        shiftId: shift.id,
-                                                                        stopId: stop.id))
+                                                                        shiftIdx: allStopList.findShiftIndexById(shiftId: shift.id) ?? 0,
+                                                                        stopIdx: {
+                                    let (_, stopIdx) =  allStopList.findBusStopIndexById(shiftId: shift.id, stopId: stop.id) ?? (0, 0)
+                                    return stopIdx
+                                }()))
+                                //                                HStack {
+                                //                                    Text("\(stop.stopName) - [\(stop.departureTime)]")
+                                //                                    Spacer()
+                                //                                    HStack {
+                                //                                        Text("Edit")
+                                //                                        Image(systemName: "chevron.right")
+                                //                                    }
+                                //                                    .foregroundStyle(.secondary)
+                                //                                }
+                                //                                .padding(.vertical)
+                                //                                .listRowSeparator(/*@START_MENU_TOKEN@*/.visible/*@END_MENU_TOKEN@*/, edges: .top)
+                                //                                .listRowSeparatorTint(.black)
+                                //                                .onTapGesture {
+                                //                                    //                                                                    viewModel.selectedBusStop = stop
+                                //                                    NavigationLink("\(stop.stopName) - [\(stop.departureTime)]",
+                                //                                                   destination: CounterView(allStopData: allStopList,
+                                //                                                                            shiftId: shift.id,
+                                //                                                                            stopId: stop.id))
+                                //
+                                //                                    isActive = true
+                                //                                    print("Mike gans")
+                                //                                }
                             }
                         }
                         .listSectionSeparator(.hidden)

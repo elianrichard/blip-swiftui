@@ -10,11 +10,11 @@ import SwiftUI
 struct CounterValueContainerView: View {
     
     @ObservedObject var allStopData: StopListData
-    var shiftId: UUID
-    var stopId: UUID
+    var shiftIdx: Int
+    var stopIdx: Int
     
     var stopData: BusStop? {
-        return allStopData.findBusStopById(shiftId: shiftId, stopId: stopId)
+        return allStopData.findBusStopByIndex(shiftIndex: shiftIdx, stopIndex: stopIdx)
     }
     
     var selectedCounter: SelectedDrawView
@@ -33,9 +33,9 @@ struct CounterValueContainerView: View {
             HStack {
                 Button {
                     if (selectedCounter == .passIn){
-                        allStopData.decrementPassengerIn(shiftId: shiftId, stopId: stopId)
+                        allStopData.decrementPassengerIn(shiftIndex: shiftIdx, busStopIndex: stopIdx)
                     } else {
-                        allStopData.decrementPassengerOut(shiftId: shiftId, stopId: stopId)
+                        allStopData.decrementPassengerOut(shiftIndex: shiftIdx, busStopIndex: stopIdx)
                     }
                 } label: {
                     Text("-")
@@ -69,9 +69,9 @@ struct CounterValueContainerView: View {
                 
                 Button {
                     if (selectedCounter == .passIn) {
-                        allStopData.incrementPassengerIn(shiftId: shiftId, stopId: stopId)
+                        allStopData.incrementPassengerIn(shiftIndex: shiftIdx, busStopIndex: stopIdx)
                     } else {
-                        allStopData.incrementPassengerOut(shiftId: shiftId, stopId: stopId)
+                        allStopData.incrementPassengerOut(shiftIndex: shiftIdx, busStopIndex: stopIdx)
                     }
                 } label: {
                     Text("+")
@@ -94,8 +94,8 @@ struct CounterValueContainerView: View {
 
 #Preview {
     CounterValueContainerView(allStopData: StopListData(),
-                              shiftId: StopListData().data[0].id,
-                              stopId: StopListData().data[0].stops[0].id,
+                              shiftIdx: 0,
+                              stopIdx: 0,
                               selectedCounter: .passIn,
                               selectedDrawView: .constant(.passIn),
                               isShowDrawView: .constant(false))
